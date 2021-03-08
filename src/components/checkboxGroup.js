@@ -28,9 +28,15 @@
       orderBy,
     } = options;
 
-    const { useText, getProperty, useAllQuery, getCustomModelAttribute } = B;
+    const {
+      env,
+      getCustomModelAttribute,
+      getProperty,
+      useAllQuery,
+      useText,
+    } = B;
     const displayError = showError === 'built-in';
-    const isDev = B.env === 'dev';
+    const isDev = env === 'dev';
 
     const componentHelperText = useText(helperText);
     const { kind, values: listValues = [] } = getProperty(property) || {};
@@ -79,24 +85,26 @@
         variables: {
           ...(orderBy ? { sort: { relation: sort } } : {}),
         },
+        onCompleted(res) {
+          const hasResult = res && res.result && res.result.length > 0;
+          if (hasResult) {
+            B.triggerEvent('onSuccess', res.results);
+          } else {
+            B.triggerEvent('onNoResults');
+          }
+        },
+        onError(resp) {
+          if (!displayError) {
+            B.triggerEvent('onError', resp);
+          }
+        },
       });
 
     if (loading) {
       B.triggerEvent('onLoad', loading);
     }
 
-    if (err && !displayError) {
-      B.triggerEvent('onError', err.message);
-    }
-
     const { results } = data || {};
-    if (results) {
-      if (results.length > 0) {
-        B.triggerEvent('onSuccess', results);
-      } else {
-        B.triggerEvent('onNoResults');
-      }
-    }
 
     B.defineFunction('Refetch', () => refetch());
 
@@ -174,8 +182,8 @@
     return isDev ? <div className={classes.root}>{Control}</div> : Control;
   })(),
   styles: B => t => {
-    const style = new B.Styling(t);
-    const { color: colorFunc } = B;
+    const { color: colorFunc, Styling } = B;
+    const style = new Styling(t);
     const getOpacColor = (col, val) => colorFunc.alpha(col, val);
     return {
       root: {

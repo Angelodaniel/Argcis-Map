@@ -16,6 +16,7 @@
       showAllTabs,
       hideTabs,
     } = options;
+
     const orientation =
       alignment === 'top' || alignment === 'bottom' ? 'horizontal' : 'vertical';
     const isDev = env === 'dev';
@@ -128,15 +129,22 @@
     );
   })(),
   styles: B => t => {
-    const style = new B.Styling(t);
+    const { env, Styling } = B;
+    const style = new Styling(t);
+    const isDev = env === 'dev';
+
     return {
       wrapper: {
+        height: ({ options: { height } }) => height,
+        width: ({ options: { width } }) => width,
         '& .MuiTabs-flexContainer > button': {
           pointerEvents: 'none',
         },
       },
       tabs: {
         display: 'flex',
+        height: ({ options: { height } }) => (isDev ? '100%' : height),
+        width: ({ options: { width } }) => (isDev ? '100%' : width),
         flexDirection: ({ options: { alignment } }) => {
           switch (alignment) {
             case 'top':
@@ -159,6 +167,7 @@
           style.getColor(textColor),
           '!important',
         ],
+        minWidth: '10rem',
       },
       indicator: {
         left: ({ options: { alignment } }) => alignment === 'right' && 0,

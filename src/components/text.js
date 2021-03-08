@@ -4,27 +4,64 @@
   allowedTypes: [],
   orientation: 'HORIZONTAL',
   jsx: (() => {
-    const Tag = {
-      Title1: 'h1',
-      Title2: 'h2',
-      Title3: 'h3',
-      Title4: 'h4',
-      Title5: 'h5',
-      Title6: 'h6',
-      Body1: 'p',
-      Body2: 'p',
-    }[options.type || 'Body1'];
-    return (
+    const { content, linkType, linkTo, linkToExternal, useInnerHtml } = options;
+    const { Link } = window.MaterialUI.Core;
+    const { env, useText, Link: BLink } = B;
+    const isEmpty = content.length === 0;
+    const isDev = env === 'dev';
+    const isPristine = isEmpty && isDev;
+
+    const Tag = useInnerHtml
+      ? 'div'
+      : {
+          Title1: 'h1',
+          Title2: 'h2',
+          Title3: 'h3',
+          Title4: 'h4',
+          Title5: 'h5',
+          Title6: 'h6',
+          Body1: 'p',
+          Body2: 'p',
+        }[options.type || 'Body1'];
+
+    const parsedContent = useText(content);
+    const hasLink = linkType === 'internal' && linkTo && linkTo.id !== '';
+    const hasExternalLink =
+      linkType === 'external' && linkToExternal && linkToExternal.id !== '';
+    const linkToExternalText =
+      (linkToExternal && useText(linkToExternal)) || '';
+    let linkedContent = parsedContent;
+
+    if (hasLink || hasExternalLink) {
+      linkedContent = (
+        <Link
+          className={classes.link}
+          href={hasExternalLink ? linkToExternalText : undefined}
+          component={hasLink ? BLink : undefined}
+          endpoint={hasLink ? linkTo : undefined}
+        >
+          {parsedContent}
+        </Link>
+      );
+    }
+
+    return useInnerHtml && !isDev ? (
+      <Tag
+        className={classes.content}
+        dangerouslySetInnerHTML={{ __html: linkedContent }}
+      />
+    ) : (
       <Tag className={classes.content}>
-        {options.content.length > 0 && <B.Text value={options.content} />}
-        {options.content.length === 0 && B.env === 'dev' && (
+        {!isEmpty && linkedContent}
+        {isPristine && (
           <span className={classes.placeholder}>Empty content</span>
         )}
       </Tag>
     );
   })(),
   styles: B => t => {
-    const style = new B.Styling(t);
+    const { mediaMinWidth, Styling } = B;
+    const style = new Styling(t);
     const getSpacing = (idx, device = 'Mobile') =>
       idx === '0' ? '0rem' : style.getSpacing(idx, device);
     return {
@@ -47,7 +84,7 @@
         fontWeight: ({ options: { fontWeight } }) => fontWeight,
         textTransform: ({ options: { type } }) => style.getTextTransform(type),
         letterSpacing: ({ options: { type } }) => style.getLetterSpacing(type),
-        [`@media ${B.mediaMinWidth(600)}`]: {
+        [`@media ${mediaMinWidth(600)}`]: {
           marginTop: ({ options: { outerSpacing } }) =>
             getSpacing(outerSpacing[0], 'Portrait'),
           marginRight: ({ options: { outerSpacing } }) =>
@@ -59,7 +96,7 @@
           fontSize: ({ options: { type } }) =>
             style.getFontSize(type, 'Portrait'),
         },
-        [`@media ${B.mediaMinWidth(960)}`]: {
+        [`@media ${mediaMinWidth(960)}`]: {
           marginTop: ({ options: { outerSpacing } }) =>
             getSpacing(outerSpacing[0], 'Landscape'),
           marginRight: ({ options: { outerSpacing } }) =>
@@ -71,7 +108,7 @@
           fontSize: ({ options: { type } }) =>
             style.getFontSize(type, 'Landscape'),
         },
-        [`@media ${B.mediaMinWidth(1280)}`]: {
+        [`@media ${mediaMinWidth(1280)}`]: {
           marginTop: ({ options: { outerSpacing } }) =>
             getSpacing(outerSpacing[0], 'Desktop'),
           marginRight: ({ options: { outerSpacing } }) =>
@@ -83,6 +120,10 @@
           fontSize: ({ options: { type } }) =>
             style.getFontSize(type, 'Desktop'),
         },
+      },
+      link: {
+        textDecoration: ['none', '!important'],
+        color: ['inherit', '!important'],
       },
       placeholder: {
         color: '#dadde4',

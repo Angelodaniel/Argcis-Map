@@ -9,10 +9,11 @@
       env,
       getProperty,
       GetMe,
-      useText,
+      InteractionScope,
       ModelProvider,
       useAllQuery,
       useFilter,
+      useText,
     } = B;
     const {
       Table,
@@ -81,6 +82,7 @@
     const fetchingNextSet = useRef(false);
     const [initialTimesFetched, setInitialTimesFetched] = useState(0);
     const amountOfRows = loadOnScroll ? autoLoadTakeAmountNum : rowsPerPage;
+    const history = isDev ? null : useHistory();
 
     const createSortObject = (fields, order) => {
       const fieldsArray = [fields].flat();
@@ -154,6 +156,7 @@
 
     const where = useFilter(newFilter);
 
+    // TODO: move model to skip
     const { loading, error, data, refetch } =
       model &&
       useAllQuery(model, {
@@ -161,6 +164,19 @@
         variables,
         skip: loadOnScroll ? skip : page * rowsPerPage,
         take: loadOnScroll ? autoLoadTakeAmountNum : rowsPerPage,
+        onCompleted(res) {
+          const hasResult = res && res.result && res.result.length > 0;
+          if (hasResult) {
+            B.triggerEvent('onSuccess', res.results);
+          } else {
+            B.triggerEvent('onNoResults');
+          }
+        },
+        onError(err) {
+          if (!displayError) {
+            B.triggerEvent('onError', err);
+          }
+        },
       });
 
     useEffect(() => {
@@ -269,16 +285,6 @@
       }
     }, [loading]);
 
-    if (error && !displayError) {
-      B.triggerEvent('onError', error.message);
-    }
-
-    if (results.length > 0) {
-      B.triggerEvent('onSuccess', results);
-    } else {
-      B.triggerEvent('onNoResults');
-    }
-
     const handleChangePage = (_, newPage) => {
       if (loading || error) return;
       setPage(newPage);
@@ -304,11 +310,10 @@
       setSearch(event.target.value);
     };
 
-    const history = isDev ? {} : useHistory();
-
     const handleRowClick = (endpoint, context) => {
       if (isDev) return;
       B.triggerEvent('OnRowClick', endpoint, context);
+
       if (hasLink) {
         history.push(endpoint);
       }
@@ -346,7 +351,7 @@
 
       const rows = results.map(value => (
         <ModelProvider value={value} id={model}>
-          <B.InteractionScope model={model}>
+          <InteractionScope model={model}>
             {context => (
               <TableRow
                 key={value[0]}
@@ -362,7 +367,7 @@
                 </Children>
               </TableRow>
             )}
-          </B.InteractionScope>
+          </InteractionScope>
         </ModelProvider>
       ));
 
@@ -571,7 +576,7 @@
     );
   })(),
   styles: B => theme => {
-    const { env, Styling } = B;
+    const { env, mediaMinWidth, Styling } = B;
     const style = new Styling(theme);
     const isDev = env === 'dev';
     const getSpacing = (idx, device = 'Mobile') =>
@@ -618,15 +623,15 @@
         letterSpacing: ({ options: { titleType } }) =>
           style.getLetterSpacing(titleType),
         lineHeight: '1.2',
-        [`@media ${B.mediaMinWidth(600)}`]: {
+        [`@media ${mediaMinWidth(600)}`]: {
           fontSize: ({ options: { titleType } }) =>
             style.getFontSize(titleType, 'Portrait'),
         },
-        [`@media ${B.mediaMinWidth(960)}`]: {
+        [`@media ${mediaMinWidth(960)}`]: {
           fontSize: ({ options: { titleType } }) =>
             style.getFontSize(titleType, 'Landscape'),
         },
-        [`@media ${B.mediaMinWidth(1280)}`]: {
+        [`@media ${mediaMinWidth(1280)}`]: {
           fontSize: ({ options: { titleType } }) =>
             style.getFontSize(titleType, 'Desktop'),
         },
@@ -672,13 +677,13 @@
       },
       skeleton: {
         height: `calc(${style.getFont('Body1').Mobile} * 1.2)`,
-        [`@media ${B.mediaMinWidth(600)}`]: {
+        [`@media ${mediaMinWidth(600)}`]: {
           height: `calc(${style.getFont('Body1').Portrait} * 1.2)`,
         },
-        [`@media ${B.mediaMinWidth(960)}`]: {
+        [`@media ${mediaMinWidth(960)}`]: {
           height: `calc(${style.getFont('Body1').Landscape} * 1.2)`,
         },
-        [`@media ${B.mediaMinWidth(1280)}`]: {
+        [`@media ${mediaMinWidth(1280)}`]: {
           height: `calc(${style.getFont('Body1').Desktop} * 1.2)`,
         },
         backgroundColor: '#eee',
@@ -703,7 +708,7 @@
           backgroundPositionX: '-150%',
         },
       },
-      [`@media ${B.mediaMinWidth(600)}`]: {
+      [`@media ${mediaMinWidth(600)}`]: {
         root: {
           marginTop: ({ options: { outerSpacing } }) =>
             getSpacing(outerSpacing[0], 'Portrait'),
@@ -715,7 +720,7 @@
             getSpacing(outerSpacing[3], 'Portrait'),
         },
       },
-      [`@media ${B.mediaMinWidth(960)}`]: {
+      [`@media ${mediaMinWidth(960)}`]: {
         root: {
           marginTop: ({ options: { outerSpacing } }) =>
             getSpacing(outerSpacing[0], 'Landscape'),
@@ -727,7 +732,7 @@
             getSpacing(outerSpacing[3], 'Landscape'),
         },
       },
-      [`@media ${B.mediaMinWidth(1280)}`]: {
+      [`@media ${mediaMinWidth(1280)}`]: {
         root: {
           marginTop: ({ options: { outerSpacing } }) =>
             getSpacing(outerSpacing[0], 'Desktop'),

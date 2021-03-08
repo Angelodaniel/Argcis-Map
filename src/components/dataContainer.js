@@ -6,7 +6,15 @@
   jsx: (
     <div>
       {(() => {
-        const { useOneQuery, useMeQuery, ModelProvider, MeProvider, env } = B;
+        const {
+          env,
+          getIdProperty,
+          MeProvider,
+          ModelProvider,
+          useEndpoint,
+          useOneQuery,
+          useMeQuery,
+        } = B;
 
         const isEmpty = children.length === 0;
         const isDev = env === 'dev';
@@ -45,7 +53,7 @@
             return filter;
           }
 
-          const idProperty = B.getIdProperty(model);
+          const idProperty = getIdProperty(model);
           return {
             [idProperty.id]: { eq: currentRecord },
           };
@@ -69,7 +77,7 @@
 
         const redirect = () => {
           const history = useHistory();
-          history.push(B.useEndpoint(redirectWithoutResult));
+          history.push(useEndpoint(redirectWithoutResult));
         };
 
         const One = ({ modelId }) => {
@@ -77,6 +85,18 @@
             (hasFilter &&
               useOneQuery(modelId, {
                 filter: getFilter(),
+                onCompleted(resp) {
+                  if (resp && resp.id) {
+                    B.triggerEvent('onSuccess', resp);
+                  } else {
+                    B.triggerEvent('onNoResults');
+                  }
+                },
+                onError(resp) {
+                  if (!displayError) {
+                    B.triggerEvent('onError', resp);
+                  }
+                },
               })) ||
             {};
 
@@ -89,17 +109,8 @@
             return <span>Loading...</span>;
           }
 
-          if (error && !displayError) {
-            B.triggerEvent('onError', error.message);
-          }
           if (error && displayError) {
             return <span>{error.message}</span>;
-          }
-
-          if (data && data.id) {
-            B.triggerEvent('onSuccess', data);
-          } else {
-            B.triggerEvent('onNoResults');
           }
 
           if (!data && redirectWithoutResult) {
@@ -122,7 +133,7 @@
             B.triggerEvent('onUserLoad');
           }
           if (error) {
-            B.triggerEvent('onUserError', error.message);
+            B.triggerEvent('onUserError', error);
           }
 
           if (data && data.id) {

@@ -228,6 +228,49 @@
                   key: 'outerSpacing',
                   type: 'SIZES',
                 },
+                {
+                  type: 'CUSTOM',
+                  label: 'Link to',
+                  key: 'linkType',
+                  value: 'internal',
+                  configuration: {
+                    as: 'BUTTONGROUP',
+                    dataType: 'string',
+                    allowedInput: [
+                      { name: 'Internal page', value: 'internal' },
+                      { name: 'External page', value: 'external' },
+                    ],
+                  },
+                },
+                {
+                  value: '',
+                  label: 'Page',
+                  key: 'linkTo',
+                  type: 'ENDPOINT',
+                  configuration: {
+                    condition: {
+                      type: 'SHOW',
+                      option: 'linkType',
+                      comparator: 'EQ',
+                      value: 'internal',
+                    },
+                  },
+                },
+                {
+                  value: [''],
+                  label: 'URL',
+                  key: 'linkToExternal',
+                  type: 'VARIABLE',
+                  configuration: {
+                    placeholder: 'Starts with https:// or http://',
+                    condition: {
+                      type: 'SHOW',
+                      option: 'linkType',
+                      comparator: 'EQ',
+                      value: 'external',
+                    },
+                  },
+                },
               ],
               descendants: [],
             },
@@ -269,6 +312,49 @@
                   label: 'Outer space',
                   key: 'outerSpacing',
                   type: 'SIZES',
+                },
+                {
+                  type: 'CUSTOM',
+                  label: 'Link to',
+                  key: 'linkType',
+                  value: 'internal',
+                  configuration: {
+                    as: 'BUTTONGROUP',
+                    dataType: 'string',
+                    allowedInput: [
+                      { name: 'Internal page', value: 'internal' },
+                      { name: 'External page', value: 'external' },
+                    ],
+                  },
+                },
+                {
+                  value: '',
+                  label: 'Page',
+                  key: 'linkTo',
+                  type: 'ENDPOINT',
+                  configuration: {
+                    condition: {
+                      type: 'SHOW',
+                      option: 'linkType',
+                      comparator: 'EQ',
+                      value: 'internal',
+                    },
+                  },
+                },
+                {
+                  value: [''],
+                  label: 'URL',
+                  key: 'linkToExternal',
+                  type: 'VARIABLE',
+                  configuration: {
+                    placeholder: 'Starts with https:// or http://',
+                    condition: {
+                      type: 'SHOW',
+                      option: 'linkType',
+                      comparator: 'EQ',
+                      value: 'external',
+                    },
+                  },
                 },
               ],
               descendants: [],
@@ -394,6 +480,26 @@
                       comparator: 'EQ',
                       value: 'external',
                     },
+                  },
+                },
+                {
+                  value: '_self',
+                  label: 'Open in',
+                  key: 'openLinkToExternal',
+                  type: 'CUSTOM',
+                  configuration: {
+                    condition: {
+                      type: 'SHOW',
+                      option: 'linkType',
+                      comparator: 'EQ',
+                      value: 'external',
+                    },
+                    as: 'BUTTONGROUP',
+                    dataType: 'string',
+                    allowedInput: [
+                      { name: 'Current Tab', value: '_self' },
+                      { name: 'New Tab', value: '_blank' },
+                    ],
                   },
                 },
                 {
@@ -1759,6 +1865,122 @@
                   key: 'disabled',
                   value: false,
                   type: 'TOGGLE',
+                },
+                {
+                  label: 'Add Tooltip',
+                  key: 'addTooltip',
+                  value: false,
+                  type: 'TOGGLE',
+                  configuration: {
+                    as: 'VISIBILITY',
+                  },
+                },
+                {
+                  label: 'Toggle tooltip visibility',
+                  key: 'visibleTooltip',
+                  value: true,
+                  type: 'TOGGLE',
+                  configuration: {
+                    as: 'VISIBILITY',
+                    condition: {
+                      type: 'SHOW',
+                      option: 'addTooltip',
+                      comparator: 'EQ',
+                      value: true,
+                    },
+                  },
+                },
+                {
+                  type: 'VARIABLE',
+                  label: 'Tooltip Content',
+                  key: 'tooltipContent',
+                  value: ['Tips'],
+                  configuration: {
+                    condition: {
+                      type: 'SHOW',
+                      option: 'addTooltip',
+                      comparator: 'EQ',
+                      value: true,
+                    },
+                  },
+                },
+                {
+                  label: 'Tooltip Placement',
+                  key: 'tooltipPlacement',
+                  value: 'bottom',
+                  type: 'CUSTOM',
+                  configuration: {
+                    as: 'DROPDOWN',
+                    dataType: 'string',
+                    allowedInput: [
+                      {
+                        name: 'Top Start',
+                        value: 'top-start',
+                      },
+                      {
+                        name: 'Top',
+                        value: 'top',
+                      },
+                      {
+                        name: 'Top End',
+                        value: 'top-end',
+                      },
+                      {
+                        name: 'Right',
+                        value: 'right',
+                      },
+                      {
+                        name: 'Left',
+                        value: 'left',
+                      },
+                      {
+                        name: 'Botttom Start',
+                        value: 'bottom-start',
+                      },
+                      {
+                        name: 'Bottom',
+                        value: 'bottom',
+                      },
+                      {
+                        name: 'Bottom End',
+                        value: 'bottom-end',
+                      },
+                    ],
+                    condition: {
+                      type: 'SHOW',
+                      option: 'addTooltip',
+                      comparator: 'EQ',
+                      value: true,
+                    },
+                  },
+                },
+                {
+                  type: 'COLOR',
+                  label: 'Tooltip Background',
+                  key: 'tooltipBackground',
+                  value: 'Medium',
+                  configuration: {
+                    condition: {
+                      type: 'SHOW',
+                      option: 'addTooltip',
+                      comparator: 'EQ',
+                      value: true,
+                    },
+                  },
+                },
+                {
+                  type: 'COLOR',
+                  label: 'Tooltip Text',
+                  key: 'tooltipText',
+                  value: 'Black',
+                  configuration: {
+                    condition: {
+                      type: 'SHOW',
+                      option: 'addTooltip',
+                      comparator: 'EQ',
+                      value: true,
+                    },
+                  },
                 },
               ],
               descendants: [],

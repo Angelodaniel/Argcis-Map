@@ -5,7 +5,7 @@
   actions: [],
   interactions: [
     {
-      name: 'CloseDialog',
+      name: 'Hide',
       sourceEvent: 'Click',
       ref: {
         targetComponentId: '#dialog',
@@ -14,7 +14,7 @@
       type: 'Custom',
     },
     {
-      name: 'CloseDialog',
+      name: 'Hide',
       sourceEvent: 'Click',
       ref: {
         targetComponentId: '#dialog',
@@ -425,7 +425,7 @@
                           type: 'TOGGLE',
                         },
                         {
-                          value: 'relative',
+                          value: 'static',
                           label: 'Position',
                           key: 'position',
                           type: 'CUSTOM',
@@ -842,6 +842,26 @@
                                   comparator: 'EQ',
                                   value: 'external',
                                 },
+                              },
+                            },
+                            {
+                              value: '_self',
+                              label: 'Open in',
+                              key: 'openLinkToExternal',
+                              type: 'CUSTOM',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'linkType',
+                                  comparator: 'EQ',
+                                  value: 'external',
+                                },
+                                as: 'BUTTONGROUP',
+                                dataType: 'string',
+                                allowedInput: [
+                                  { name: 'Current Tab', value: '_self' },
+                                  { name: 'New Tab', value: '_blank' },
+                                ],
                               },
                             },
                             {
@@ -2208,6 +2228,119 @@
                               value: false,
                               type: 'TOGGLE',
                             },
+                            {
+                              label: 'Add Tooltip',
+                              key: 'addTooltip',
+                              value: false,
+                              type: 'TOGGLE',
+                            },
+                            {
+                              label: 'Toggle tooltip visibility',
+                              key: 'hasVisibleTooltip',
+                              value: true,
+                              type: 'TOGGLE',
+                              configuration: {
+                                as: 'VISIBILITY',
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              type: 'VARIABLE',
+                              label: 'Tooltip Content',
+                              key: 'tooltipContent',
+                              value: ['Tips'],
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              label: 'Tooltip Placement',
+                              key: 'tooltipPlacement',
+                              value: 'bottom',
+                              type: 'CUSTOM',
+                              configuration: {
+                                as: 'DROPDOWN',
+                                dataType: 'string',
+                                allowedInput: [
+                                  {
+                                    name: 'Top Start',
+                                    value: 'top-start',
+                                  },
+                                  {
+                                    name: 'Top',
+                                    value: 'top',
+                                  },
+                                  {
+                                    name: 'Top End',
+                                    value: 'top-end',
+                                  },
+                                  {
+                                    name: 'Right',
+                                    value: 'right',
+                                  },
+                                  {
+                                    name: 'Left',
+                                    value: 'left',
+                                  },
+                                  {
+                                    name: 'Botttom Start',
+                                    value: 'bottom-start',
+                                  },
+                                  {
+                                    name: 'Bottom',
+                                    value: 'bottom',
+                                  },
+                                  {
+                                    name: 'Bottom End',
+                                    value: 'bottom-end',
+                                  },
+                                ],
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              type: 'COLOR',
+                              label: 'Tooltip Background',
+                              key: 'tooltipBackground',
+                              value: 'Medium',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              type: 'COLOR',
+                              label: 'Tooltip Text',
+                              key: 'tooltipText',
+                              value: 'Black',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
                           ],
                           descendants: [],
                         },
@@ -2601,7 +2734,7 @@
                           type: 'TOGGLE',
                         },
                         {
-                          value: 'relative',
+                          value: 'static',
                           label: 'Position',
                           key: 'position',
                           type: 'CUSTOM',
@@ -2929,6 +3062,26 @@
                                   comparator: 'EQ',
                                   value: 'external',
                                 },
+                              },
+                            },
+                            {
+                              value: '_self',
+                              label: 'Open in',
+                              key: 'openLinkToExternal',
+                              type: 'CUSTOM',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'linkType',
+                                  comparator: 'EQ',
+                                  value: 'external',
+                                },
+                                as: 'BUTTONGROUP',
+                                dataType: 'string',
+                                allowedInput: [
+                                  { name: 'Current Tab', value: '_self' },
+                                  { name: 'New Tab', value: '_blank' },
+                                ],
                               },
                             },
                             {
@@ -4295,6 +4448,122 @@
                               value: false,
                               type: 'TOGGLE',
                             },
+                            {
+                              label: 'Toggle tooltip visibility',
+                              key: 'hasVisibleTooltip',
+                              value: true,
+                              type: 'TOGGLE',
+                              configuration: {
+                                as: 'VISIBILITY',
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              label: 'Add Tooltip',
+                              key: 'addTooltip',
+                              value: false,
+                              type: 'TOGGLE',
+                              configuration: {
+                                as: 'VISIBILITY',
+                              },
+                            },
+                            {
+                              type: 'VARIABLE',
+                              label: 'Tooltip Content',
+                              key: 'tooltipContent',
+                              value: ['Tips'],
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              label: 'Tooltip Placement',
+                              key: 'tooltipPlacement',
+                              value: 'bottom',
+                              type: 'CUSTOM',
+                              configuration: {
+                                as: 'DROPDOWN',
+                                dataType: 'string',
+                                allowedInput: [
+                                  {
+                                    name: 'Top Start',
+                                    value: 'top-start',
+                                  },
+                                  {
+                                    name: 'Top',
+                                    value: 'top',
+                                  },
+                                  {
+                                    name: 'Top End',
+                                    value: 'top-end',
+                                  },
+                                  {
+                                    name: 'Right',
+                                    value: 'right',
+                                  },
+                                  {
+                                    name: 'Left',
+                                    value: 'left',
+                                  },
+                                  {
+                                    name: 'Botttom Start',
+                                    value: 'bottom-start',
+                                  },
+                                  {
+                                    name: 'Bottom',
+                                    value: 'bottom',
+                                  },
+                                  {
+                                    name: 'Bottom End',
+                                    value: 'bottom-end',
+                                  },
+                                ],
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              type: 'COLOR',
+                              label: 'Tooltip Background',
+                              key: 'tooltipBackground',
+                              value: 'Medium',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              type: 'COLOR',
+                              label: 'Tooltip Text',
+                              key: 'tooltipText',
+                              value: 'Black',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
                           ],
                           descendants: [],
                         },
@@ -4382,6 +4651,26 @@
                                   comparator: 'EQ',
                                   value: 'external',
                                 },
+                              },
+                            },
+                            {
+                              value: '_self',
+                              label: 'Open in',
+                              key: 'openLinkToExternal',
+                              type: 'CUSTOM',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'linkType',
+                                  comparator: 'EQ',
+                                  value: 'external',
+                                },
+                                as: 'BUTTONGROUP',
+                                dataType: 'string',
+                                allowedInput: [
+                                  { name: 'Current Tab', value: '_self' },
+                                  { name: 'New Tab', value: '_blank' },
+                                ],
                               },
                             },
                             {
@@ -5747,6 +6036,122 @@
                               key: 'disabled',
                               value: false,
                               type: 'TOGGLE',
+                            },
+                            {
+                              label: 'Toggle tooltip visibility',
+                              key: 'hasVisibleTooltip',
+                              value: true,
+                              type: 'TOGGLE',
+                              configuration: {
+                                as: 'VISIBILITY',
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              label: 'Add Tooltip',
+                              key: 'addTooltip',
+                              value: false,
+                              type: 'TOGGLE',
+                              configuration: {
+                                as: 'VISIBILITY',
+                              },
+                            },
+                            {
+                              type: 'VARIABLE',
+                              label: 'Tooltip Content',
+                              key: 'tooltipContent',
+                              value: ['Tips'],
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              label: 'Tooltip Placement',
+                              key: 'tooltipPlacement',
+                              value: 'bottom',
+                              type: 'CUSTOM',
+                              configuration: {
+                                as: 'DROPDOWN',
+                                dataType: 'string',
+                                allowedInput: [
+                                  {
+                                    name: 'Top Start',
+                                    value: 'top-start',
+                                  },
+                                  {
+                                    name: 'Top',
+                                    value: 'top',
+                                  },
+                                  {
+                                    name: 'Top End',
+                                    value: 'top-end',
+                                  },
+                                  {
+                                    name: 'Right',
+                                    value: 'right',
+                                  },
+                                  {
+                                    name: 'Left',
+                                    value: 'left',
+                                  },
+                                  {
+                                    name: 'Botttom Start',
+                                    value: 'bottom-start',
+                                  },
+                                  {
+                                    name: 'Bottom',
+                                    value: 'bottom',
+                                  },
+                                  {
+                                    name: 'Bottom End',
+                                    value: 'bottom-end',
+                                  },
+                                ],
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              type: 'COLOR',
+                              label: 'Tooltip Background',
+                              key: 'tooltipBackground',
+                              value: 'Medium',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
+                            },
+                            {
+                              type: 'COLOR',
+                              label: 'Tooltip Text',
+                              key: 'tooltipText',
+                              value: 'Black',
+                              configuration: {
+                                condition: {
+                                  type: 'SHOW',
+                                  option: 'addTooltip',
+                                  comparator: 'EQ',
+                                  value: true,
+                                },
+                              },
                             },
                           ],
                           descendants: [],
