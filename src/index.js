@@ -5,10 +5,14 @@ import * as Styles from '@material-ui/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import enLocale from 'date-fns/locale/en-US';
 import nlLocale from 'date-fns/locale/nl';
+import * as Arcgis from '@esri/react-arcgis';
+import * as EsriLoader from 'esri-loader';
 
 import Icons from './icons';
 
 export default {
+  Arcgis,
+  EsriLoader,
   Core,
   Icons,
   Lab,
